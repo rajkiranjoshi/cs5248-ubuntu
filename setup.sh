@@ -17,6 +17,11 @@ fi
 
 echo "=> Adding user '$USERNAME' with sudo priviledges"
 adduser --disabled-password --gecos "" $USERNAME
+# Docker's mount volume option already creates the user dir
+# In this case, adduser won't copy the skeleton
+# So do it manually!
+cp -r /etc/skel/. /home/$USERNAME/
+chown -R $USERNAME:$USERNAME /home/$USERNAME/ # need to change owner as well
 addgroup $USERNAME sudo # add user to sudoers
 echo "$USERNAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers # nullify the need for sudo password
 echo "=> Done!"
